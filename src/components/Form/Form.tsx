@@ -27,7 +27,6 @@ export function Form() {
     e.preventDefault();
     if (!form.current) return;
 
-    // block if no valid captcha token
     if (!validEmail || !message.trim() || !captchaToken) {
       toast.error('Please fill all fields and complete the CAPTCHA.', {
         position: 'bottom-left',
@@ -56,7 +55,6 @@ export function Form() {
       )
       .finally(() => {
         setIsSubmitting(false);
-        // reset captcha so user would need to re-verify for another send
         setCaptchaToken(null);
       });
   };
@@ -78,7 +76,7 @@ export function Form() {
     );
   }
 
-  return (  
+  return (
     <Container>
       <h2>Get in touch using the form</h2>
       <form ref={form} onSubmit={sendEmail}>
@@ -115,14 +113,8 @@ export function Form() {
         {/* reCAPTCHA Section */}
         <ReCAPTCHA
           sitekey="6Ldnc5UrAAAAAGbjoddYJnl5vB6T7F4oTomHbjsL"
-          onChange={(token) => {
-            setIsHuman(true);
-            setCaptchaToken(token);
-          }}
-          onExpired={() => {
-            setIsHuman(false);
-            setCaptchaToken(null);
-          }}
+          onChange={(token) => setCaptchaToken(token)}
+          onExpired={() => setCaptchaToken(null)}
         />
 
         <button
