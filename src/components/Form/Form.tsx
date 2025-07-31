@@ -11,11 +11,7 @@ export function Form() {
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const [message, setMessage] = useState('');
-
-  const [ setIsHuman] = useState(false);
-  // store the actual token here
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -110,7 +106,6 @@ export function Form() {
           required
         />
 
-        {/* reCAPTCHA Section */}
         <ReCAPTCHA
           sitekey="6Ldnc5UrAAAAAGbjoddYJnl5vB6T7F4oTomHbjsL"
           onChange={(token) => setCaptchaToken(token)}
@@ -128,3 +123,4 @@ export function Form() {
     </Container>
   );
 }
+
