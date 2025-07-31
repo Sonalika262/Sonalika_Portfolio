@@ -12,7 +12,7 @@ export function Form() {
   const [validEmail, setValidEmail] = useState(false);
   const [message, setMessage] = useState('');
 
-  const [isHuman, setIsHuman] = useState(false);
+  const [ setIsHuman] = useState(false);
   // store the actual token here
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
