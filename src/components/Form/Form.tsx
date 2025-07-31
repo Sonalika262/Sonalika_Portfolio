@@ -2,11 +2,12 @@ import React, { useRef, useState, FormEvent } from 'react';
 import * as emailjs from '@emailjs/browser';
 import { Container, ContainerSucces } from './styles';
 import { toast, ToastContainer } from 'react-toastify';
-import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha'; 
 import validator from 'validator';
 
 export function Form() {
   const form = useRef<HTMLFormElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null); 
 
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
@@ -19,7 +20,7 @@ export function Form() {
     setValidEmail(validator.isEmail(value));
   };
 
-  const sendEmail = (e: FormEvent) => {
+  const sendEmail = async (e: FormEvent) => { // Made async to await reset
     e.preventDefault();
     if (!form.current) return;
 
@@ -32,27 +33,26 @@ export function Form() {
 
     setIsSubmitting(true);
 
-    emailjs
-      .sendForm('service_i0jjzis', 'template_fcb0rza', form.current, {
+    try {
+      await emailjs.sendForm('service_i0jjzis', 'template_fcb0rza', form.current, {
         publicKey: 'o0xTZjf1rz0Uo5G2b',
-      })
-      .then(
-        () => {
-          toast.success('Email successfully sent!', {
-            position: 'bottom-left',
-          });
-          setIsSubmitted(true);
-        },
-        (error) => {
-          toast.error(`Failed to send: ${error.text}`, {
-            position: 'bottom-left',
-          });
-        }
-      )
-      .finally(() => {
-        setIsSubmitting(false);
-        setCaptchaToken(null);
       });
+      toast.success('Email successfully sent!', {
+        position: 'bottom-left',
+      });
+      setIsSubmitted(true);
+    } catch (error: any) {
+      toast.error(`Failed to send: ${error.text || 'Unknown error'}`, {
+        position: 'bottom-left',
+      });
+    } finally {
+      setIsSubmitting(false);
+      setCaptchaToken(null);
+      // Explicitly reset reCAPTCHA widget after submission
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+    }
   };
 
   if (isSubmitted) {
@@ -63,6 +63,10 @@ export function Form() {
           onClick={() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setIsSubmitted(false);
+            // Optionally clear form fields if returning to the form
+            setEmail('');
+            setValidEmail(false);
+            setMessage('');
           }}
         >
           Back to the top
@@ -107,7 +111,8 @@ export function Form() {
         />
 
         <ReCAPTCHA
-          sitekey="6Ldnc5UrAAAAAGbjoddYJnl5vB6T7F4oTomHbjsL"
+          ref={recaptchaRef}
+          sitekey="6LcHlZUrAAAAAIApe5d06yOnVnKGpMYb5q7bVmhv"
           onChange={(token) => setCaptchaToken(token)}
           onExpired={() => setCaptchaToken(null)}
         />
@@ -123,4 +128,3 @@ export function Form() {
     </Container>
   );
 }
-
