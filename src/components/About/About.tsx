@@ -4,7 +4,7 @@ import cssIcon from "../../assets/css-icon.svg";
 import jsIcon from "../../assets/js-icon.svg";
 import tailwind from "../../assets/tailwind.svg";
 import nextjs from "../../assets/next-js.svg";
-import profile from "../../assets/profile.png"
+import profile from "../../assets/profile (2).png"
 import mysql from "../../assets/mysql.svg";
 import reactIcon from "../../assets/react-icon.svg";
 import boostrapIcon from "../../assets/bootstrap-icon.svg";
